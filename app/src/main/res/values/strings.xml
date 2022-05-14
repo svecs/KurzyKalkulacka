@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Currency calculator</string>
+    <string name="title_prevody">Conversions</string>
+    <string name="title_kurzy">Rates</string>
+    <string name="title_vybermeny">Currency selection</string>
+    <string name="search_currency">Search currency</string>
+    <string name="konverzny_kurz">Conversion rate</string>
+    <string name="favorites">Favourites</string>
+    <string name="other">Other</string>
+    <string name="currency_detail">Currency detail</string>
+    <string name="iso_4217_id">ISO 4217 ID: </string>
+    <string name="slovak_name">Slovak name: </string>
+    <string name="english_name">English name: </string>
+    <string name="mark_as_favourite">Mark as favourite</string>
+    <string name="price_to_eur">Value (relative to 1 EUR): </string>
+    <string name="last_update">Last update: </string>
+    <string name="historical_trend">Historical development of value</string>
+
+</resources>

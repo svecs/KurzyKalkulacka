@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Menová kalkulačka</string>
+    <string name="title_kurzy">Kurzy</string>
+    <string name="title_prevody">Prevody</string>
+    <string name="title_vybermeny">Výber meny</string>
+    <string name="search_currency">Hľadaj menu</string>
+    <string name="konverzny_kurz">Konverzný kurz</string>
+    <string name="favorites">Obľúbené</string>
+    <string name="other">Ostatné</string>
+    <string name="currency_detail">Náhľad meny</string>
+    <string name="iso_4217_id">"Skratka podľa ISO 4217: "</string>
+    <string name="slovak_name">"Slovenský názov: "</string>
+    <string name="english_name">"Anglický názov: "</string>
+    <string name="mark_as_favourite">Označiť ako obľúbenú</string>
+    <string name="price_to_eur">Hodnota (vzhľadom na 1 EUR): </string>
+    <string name="last_update">Dátum poslednej aktualizácie</string>
+    <string name="historical_trend">Historický vývoj hodnoty</string>
+
+</resources>

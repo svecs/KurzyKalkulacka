@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.HomeFragment">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/prevodCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/firstChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipIconSize="16dp"
+                    android:text="EUR">
+
+                </com.google.android.material.chip.Chip>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/firstValTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    app:endIconMode="clear_text"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:id="@+id/firstValEditText"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/secondChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CZK"
+                    app:chipIconSize="16dp"
+                    >
+
+                </com.google.android.material.chip.Chip>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/secondValTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    app:endIconMode="clear_text"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:id="@+id/secondValEditText"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:id="@+id/swapButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:text="Otočiť"
+                    app:icon="@drawable/ic_baseline_swap_vert_24"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
+
+                <TextView
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:paddingTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@id/kurzText"
+                    android:textStyle="bold"
+                    android:text="@string/konverzny_kurz">
+                </TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="1 EUR = 1.27 CZK"
+                    android:paddingBottom="10dp"
+                    android:id="@+id/kurzText">
+
+                </TextView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="10dp">
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnCount="3"
+            android:rowCount="4"
+            android:padding="10dp"
+            android:useDefaultMargins="true">
+
+            <Button
+                android:id="@+id/b1"
+                android:text="1"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </Button>
+            <Button
+                android:id="@+id/b2"
+                android:text="2"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </Button>
+            <Button
+                android:id="@+id/b3"
+                android:text="3"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </Button>
+
+            <Button
+                android:id="@+id/b4"
+                android:text="4"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </Button>
+            <Button
+                android:id="@+id/b5"
+                android:text="5"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </Button>
+            <Button
+                android:id="@+id/b6"
+                android:text="6"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </Button>
+
+            <Button
+                android:id="@+id/b7"
+                android:text="7"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </Button>
+            <Button
+                android:id="@+id/b8"
+                android:text="8"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </Button>
+
+            <Button
+                android:id="@+id/b9"
+                android:text="9"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </Button>
+
+            <Button
+                android:id="@+id/bdot"
+                android:text=","
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </Button>
+            <Button
+                android:id="@+id/b0"
+                android:text="0"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </Button>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bback"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                app:icon="@drawable/ic_baseline_backspace_24"
+                app:iconGravity="textStart"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_height="64dp">
+
+            </com.google.android.material.button.MaterialButton>
+
+
+
+        </GridLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
