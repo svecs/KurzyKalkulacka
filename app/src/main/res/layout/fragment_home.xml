@@ -68,10 +68,10 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/firstChip"
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     app:chipIconSize="16dp"
-                    android:text="EUR">
+                    android:text="@string/pick">
 
                 </com.google.android.material.chip.Chip>
 
@@ -101,9 +101,9 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/secondChip"
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
-                    android:text="CZK"
+                    android:text="@string/pick"
                     app:chipIconSize="16dp"
                     >
 
@@ -142,7 +142,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginEnd="10dp"
-                    android:text="Otočiť"
+                    android:text="@string/swap"
                     app:icon="@drawable/ic_baseline_swap_vert_24"
                     style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
 

@@ -273,37 +273,16 @@ class HomeFragment : Fragment() {
 
         mainActivityViewModel.chybaPripojenia.observe(activity as MainActivity) {
             Log.wtf("CHPR", it.toString())
-            if(!mainActivityViewModel.razZavolane) {
-                mainActivityViewModel.razZavolane = true
-                return@observe
-            }
             if(it) {
                 mainActivityViewModel.jePrazdnaTabulka()
-                /*prevodyViewModel.upravKurzA(sp.getString("mena0", null) ?: "USD")
-                prevodyViewModel.upravKurzB(sp.getString("mena1", null) ?: "CZK")
-
-                binding.firstChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzA.value!!.idMeny.substring(0,2))
-                binding.secondChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzB.value!!.idMeny.substring(0,2))
-
-                binding.firstChip.text = prevodyViewModel.kurzA.value!!.idMeny
-                binding.secondChip.text = prevodyViewModel.kurzB.value!!.idMeny*/
-
-                //binding.loadingCL.visibility = View.GONE
-                //binding.kalkulackaLL.visibility = View.VISIBLE
-            }
-            else {
-                //prevodyViewModel.upravKurzA(sp.getString("mena0", null))
-                //prevodyViewModel.upravKurzB(sp.getString("mena1", null))
-
-                /*binding.firstChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzA.value!!.idMeny.substring(0,2))
-                binding.secondChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzB.value!!.idMeny.substring(0,2))
-
-                binding.firstChip.text = prevodyViewModel.kurzA.value!!.idMeny
-                binding.secondChip.text = prevodyViewModel.kurzB.value!!.idMeny*/
             }
         }
 
         mainActivityViewModel.tabulkaPrazdna.observe(activity as MainActivity) {
+            if(!mainActivityViewModel.razZavolane) {
+                mainActivityViewModel.razZavolane = true
+                return@observe
+            }
             if(it) {
                 Log.wtf("TabPr", "Tabulka je prazdna")
                 MaterialAlertDialogBuilder(requireContext())
@@ -327,7 +306,10 @@ class HomeFragment : Fragment() {
         prevodyViewModel.nasobok.observe(viewLifecycleOwner) {
             if(mainActivityViewModel.dataPrisli.value!! xor mainActivityViewModel.chybaPripojenia.value!!) {
                 Log.wtf("nasobok", it.toString())
-                if(it <= 0) return@observe
+                if(it <= 0) {
+                    binding.kurzText.text = getString(R.string.no_selected_curr)
+                    return@observe
+                }
                 val fm: String = prevodyViewModel.kurzA.value!!.idMeny
                 var nsb: String = "%.2f".format(prevodyViewModel.nasobok.value)
                 val sm: String = prevodyViewModel.kurzB.value!!.idMeny

@@ -2,6 +2,7 @@ package com.example.kurzykalkulacka.ui
 
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,8 +52,12 @@ class VyberMenyAdapter(var data: List<Mena>, var vlajky: List<Drawable?>, val li
         holder.nazovMenyTextview.text = data[position].slovenskyNazov
         holder.vlajkaImageView.setImageDrawable(vlajky[position])
         if(data[position].oblubena) {
+            Log.wtf("VMA", data[position].toString())
             holder.oblubenyImageView.setImageResource(R.drawable.ic_baseline_star_24)
             holder.oblubenyImageView.setColorFilter(farbaHviezdy)
+        }
+        else {
+            holder.oblubenyImageView.setImageResource(0)
         }
         holder.bind(listener, data[position])
     }

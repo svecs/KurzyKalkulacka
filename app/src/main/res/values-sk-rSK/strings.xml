@@ -22,5 +22,8 @@
     <string name="empty_tab_message">Z dôvodu chýbajúcich vopred uložených dát a žiadneho internetu nie je možné fungovať v offline režime.</string>
     <string name="empty_tab_header">Prázdna pamäť</string>
     <string name="empty_tab_accept">Ukončiť aplikáciu</string>
+    <string name="pick">Vybrať</string>
+    <string name="no_selected_curr">Nie sú vybraté meny</string>
+    <string name="swap">Otočiť</string>
 
 </resources>

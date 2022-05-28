@@ -21,4 +21,7 @@
     <string name="empty_tab_header">Data is empty</string>
     <string name="empty_tab_message">Due to missing data and no internet connection available, application cannot work in offline mode.</string>
     <string name="empty_tab_accept">Close the application</string>
+    <string name="pick">Pick</string>
+    <string name="no_selected_curr">No currency selected</string>
+    <string name="swap">Swap</string>
 </resources>
