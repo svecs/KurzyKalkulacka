@@ -15,5 +15,10 @@
     <string name="price_to_eur">Value (relative to 1 EUR): </string>
     <string name="last_update">Last update: </string>
     <string name="historical_trend">Historical development of value</string>
-
+    <string name="historical_trend_sub">for the last 3 months</string>
+    <string name="connection_error">Internet connection is not available, app goes offline</string>
+    <string name="loading_data">Loading data</string>
+    <string name="empty_tab_header">Data is empty</string>
+    <string name="empty_tab_message">Due to missing data and no internet connection available, application cannot work in offline mode.</string>
+    <string name="empty_tab_accept">Close the application</string>
 </resources>

@@ -22,7 +22,7 @@ interface KurzDao {
     suspend fun getStarsieKurzy(): List<Kurz>
 
     @Query("SELECT * FROM kurzy WHERE idMeny=:menaId ORDER BY datum DESC LIMIT 1")
-    fun readNajnovsiKurzPreMenu(menaId: String): Kurz
+    fun readNajnovsiKurzPreMenu(menaId: String): Kurz?
 
     @Query("SELECT * FROM kurzy WHERE idMeny=:menaId ORDER BY datum DESC LIMIT 1 OFFSET 1")
     fun readVcerajsiKurzPreMenu(menaId: String): Kurz?
@@ -33,8 +33,11 @@ interface KurzDao {
     @Query("DELETE FROM kurzy WHERE datum <= :datum")
     suspend fun zmazStare(datum: String)
 
-    @Query("SELECT * FROM kurzy WHERE idMeny=:menaId ORDER BY datum DESC")
+    @Query("SELECT * FROM kurzy WHERE idMeny=:menaId ORDER BY datum")
     suspend fun readVsetkyKurzyPreMenu(menaId: String): List<Kurz>
+
+    @Query("SELECT COUNT(*) FROM kurzy")
+    suspend fun readPocetKurzov(): Int
 
     @Insert
     /*suspend*/ fun insert(k: Kurz)

@@ -1,43 +1,25 @@
-package com.example.kurzykalkulacka.ui.home
+package com.example.kurzykalkulacka.ui.conversions
 
-import android.text.format.DateFormat
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.example.kurzykalkulacka.data.entities.Kurz
 import com.example.kurzykalkulacka.PrevodModel
-import com.example.kurzykalkulacka.R
 import com.example.kurzykalkulacka.data.DefaultRepository
+import com.example.kurzykalkulacka.data.NejdeAPIException
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.lang.reflect.Field
-import java.util.*
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
 class PrevodyViewModel @Inject constructor(
     private val repository: DefaultRepository
 ): ViewModel() {
-
-    fun loadData() {
-        dataNacitane.value = false
-        //val asc = viewModelScope.launch {
-            //repository.loadData()
-            dataNacitane.postValue(true)
-        //}
-    }
-
-    fun stiahniData() {
-        viewModelScope.launch {
-
-            withContext(Dispatchers.IO) {
-                repository.getKurzy()
-            }
-
-        }
-    }
 
     val dataNacitane: MutableLiveData<Boolean> = MutableLiveData(false)
 
@@ -54,25 +36,46 @@ class PrevodyViewModel @Inject constructor(
     val firstVal: MutableLiveData<Double> = _firstVal;
     val secondVal: MutableLiveData<Double> = _secondVal
 
-    val kurzA: MutableLiveData<Kurz> = MutableLiveData<Kurz>(null)
-    val kurzB: MutableLiveData<Kurz> = MutableLiveData<Kurz>(null)
+    val kurzA: MutableLiveData<Kurz?> = MutableLiveData<Kurz?>(null)
+    val kurzB: MutableLiveData<Kurz?> = MutableLiveData<Kurz?>(null)
 
     val nasobok: MutableLiveData<Double> = MutableLiveData(1.0)
 
-    fun upravKurzA(idMeny: String) {
-        //viewModelScope.launch(Dispatchers.IO) {
-            kurzA.value = repository.getDnesnyKurz(idMeny)
-            if(kurzA.value != null && kurzB.value != null)
-                nasobok.value = (kurzB.value!!.hodnota)/(kurzA.value!!.hodnota)
-        //}
+    fun upravKurzA(idMeny: String?) {
+        Log.wtf("upravKurzA", idMeny)
+        viewModelScope.launch(Dispatchers.IO) {
+            //kurzA.value = repository.getDnesnyKurz(idMeny)
+            val k: Kurz? = repository.getDnesnyKurz(idMeny)
+            Log.wtf("upravKurzA", k.toString())
+            withContext(Dispatchers.Main) {
+                kurzA.value = k
+                if (kurzA.value != null && kurzB.value != null && kurzA.value!!.hodnota > 0)
+                    nasobok.value = (kurzB.value!!.hodnota) / (kurzA.value!!.hodnota)
+                else
+                    nasobok.value = -1.0
+            }
+        }
     }
 
-    fun upravKurzB(idMeny: String) {
-        viewModelScope.launch {
-            kurzB.value = repository.getDnesnyKurz(idMeny)
-            if(kurzA.value != null && kurzB.value != null)
-                nasobok.value = (kurzB.value!!.hodnota)/(kurzA.value!!.hodnota)
+    fun upravKurzB(idMeny: String?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val k: Kurz? = repository.getDnesnyKurz(idMeny)
+            withContext(Dispatchers.Main) {
+                kurzB.value = k
+                if (kurzA.value != null && kurzB.value != null && kurzA.value!!.hodnota > 0)
+                    nasobok.value = (kurzB.value!!.hodnota) / (kurzA.value!!.hodnota)
+                else
+                    nasobok.value = -1.0
+            }
         }
+    }
+
+    fun swapniKurzy() {
+        val dummy = kurzA.value
+        kurzA.value = kurzB.value
+        kurzB.value = dummy!!
+        nasobok.value = 1 / nasobok.value!!
+        aktualizujPrevodyZhoraDole()
     }
 
     fun aktualizujPrevodyZhoraDole() {

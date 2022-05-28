@@ -8,5 +8,5 @@ data class Mena(
     @PrimaryKey val skratka: String,
     val anglickyNazov: String,
     val slovenskyNazov: String,
-    val oblubena: Boolean = false
+    var oblubena: Boolean = false
 )

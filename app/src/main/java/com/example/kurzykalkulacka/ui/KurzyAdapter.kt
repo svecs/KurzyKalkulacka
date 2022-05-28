@@ -2,6 +2,7 @@ package com.example.kurzykalkulacka.ui
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,8 @@ import com.google.android.material.card.MaterialCardView
 import org.w3c.dom.Text
 import java.text.DecimalFormat
 
-class KurzyAdapter(var meny: List<KurzModel>, var oblubene: Int, var vlajky: List<Drawable?>, var farby: Map<Int, Int>, val listener: KurzModelClickListener):
+class KurzyAdapter(var meny: List<KurzModel>, var oblubene: Int, var farby: Map<Int, Int>, val listener: KurzModelClickListener,
+val oblOst: Pair<String, String>):
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface KurzModelClickListener {
@@ -63,18 +65,26 @@ class KurzyAdapter(var meny: List<KurzModel>, var oblubene: Int, var vlajky: Lis
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder.itemViewType == 0) {
             if(position == 0) {
-                (holder as CatViewHolder).catTextView.text = "Obľúbené" //TODO: Zmenit
+                (holder as CatViewHolder).catTextView.text = oblOst.first //TODO: Zmenit
             } else {
-                (holder as CatViewHolder).catTextView.text = "Ostatné"
+                (holder as CatViewHolder).catTextView.text = oblOst.second
             }
         } else {
             var pos = if(position > oblubene + 1) position - 2 else position - 1
             (holder as KurzViewHolder).skratkaMenyTextview.text = meny[pos].mena.skratka
             (holder as KurzViewHolder).nazovMenyTextview.text = meny[pos].mena.slovenskyNazov
             (holder as KurzViewHolder).rastTextView.text = DecimalFormat("##.##%").format(meny[pos].percento)
-            (holder as KurzViewHolder).vlajkaImageView.setImageDrawable(vlajky[pos])
+            (holder as KurzViewHolder).vlajkaImageView.setImageDrawable(meny[pos].vlajka)
 
             (holder as KurzViewHolder).rastTextView.setTextColor(farby[meny[pos].pohyb]!!)
+            when(meny[pos].pohyb) {
+                1 -> (holder as KurzViewHolder).rastTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_trending_up_24, 0)
+                -1 -> (holder as KurzViewHolder).rastTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_trending_down_24, 0)
+                0 -> (holder as KurzViewHolder).rastTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_trending_flat_24, 0)
+            }
+
+            //https://stackoverflow.com/questions/22297073/how-to-programmatically-set-drawableright-on-android-edittext
+            Log.wtf("pohyb", meny[pos].pohyb.toString())
             (holder as KurzViewHolder).rastTextView.compoundDrawableTintList = ColorStateList.valueOf(farby[meny[pos].pohyb]!!)
 
                     //https://stackoverflow.com/questions/30938620/android-button-drawable-tint

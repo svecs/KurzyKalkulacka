@@ -56,10 +56,16 @@ class VyberMeny : AppCompatActivity(), VyberMenyAdapter.MenaClickListener {
 
         val searchListener: androidx.appcompat.widget.SearchView.OnQueryTextListener = object: androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
+                vykonaj(p0)
                 return true
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
+                vykonaj(p0)
+                return true
+            }
+
+            private fun vykonaj(p0: String?) {
                 Log.wtf("Hladanie", p0)
                 val meny: MutableList<Mena> = mutableListOf()
                 val vlajky: MutableList<Drawable?> = mutableListOf()
@@ -79,7 +85,6 @@ class VyberMeny : AppCompatActivity(), VyberMenyAdapter.MenaClickListener {
                     (binding.vyberMenyRw.adapter as VyberMenyAdapter).vlajky = vlajky
                 }
                 (binding.vyberMenyRw.adapter as VyberMenyAdapter).notifyDataSetChanged()
-                return true
             }
 
         }

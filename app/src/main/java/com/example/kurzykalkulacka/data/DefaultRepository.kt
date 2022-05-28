@@ -13,11 +13,14 @@ import com.example.kurzykalkulacka.data.dao.MenaDao
 import com.example.kurzykalkulacka.data.entities.Kurz
 import com.example.kurzykalkulacka.data.entities.Mena
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Call
 import retrofit2.Response
 import java.lang.Exception
 import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
+import retrofit2.Callback
+import java.lang.RuntimeException
 
 @WorkerThread
 class DefaultRepository @Inject constructor(
@@ -26,8 +29,10 @@ class DefaultRepository @Inject constructor(
     private val menaDao: MenaDao,
     val kurzyAPI: KurzyAPI
 ) {
-    fun getDnesnyKurz(menaId: String): Kurz =
-        kurzDao.readNajnovsiKurzPreMenu(menaId)
+    fun getDnesnyKurz(menaId: String?): Kurz? {
+        return if(menaId == null) null
+        else kurzDao.readNajnovsiKurzPreMenu(menaId)
+    }
 
     suspend fun getNovsieKurzy(): List<Kurz> {
         return kurzDao.getNajnovsieKurzy()
@@ -45,10 +50,13 @@ class DefaultRepository @Inject constructor(
         return kurzDao.readVsetkyKurzyPreMenu(menaId)
     }
 
-    suspend fun getKurzy(): Response<KurzyResponse> {
-        try {
+    suspend fun jePrazdnaKurzTab(): Boolean = kurzDao.readPocetKurzov() == 0
+
+    suspend fun getKurzy(): Boolean {
+        menaDao.insertAll(Meny.vsetkyMeny)
+        return try {
             val resp: Response<KurzyResponse> = kurzyAPI.ziskajKurzy90()
-            Log.wtf("respons", resp.toString());
+            Log.wtf("respons", resp.toString())
             if(resp.isSuccessful) {
                 val k: KurzyResponse? = resp.body()
                 Log.wtf("kr",k.toString())
@@ -61,8 +69,6 @@ class DefaultRepository @Inject constructor(
                     }
                     meny.add(Mena("RUB", false))
                 }*/
-
-                menaDao.insertAll(Meny.vsetkyMeny)
 
                 //kurzDao.deleteAll()
                 val kurzy = mutableListOf<Kurz>()
@@ -81,14 +87,22 @@ class DefaultRepository @Inject constructor(
                 Log.wtf("stary datum", sdatum)
                 kurzDao.zmazStare(sdatum)
             }
-            return resp
+            true
         } catch (e: Exception) {
-            e.printStackTrace()
-            throw e
+             false
         }
     }
 
     suspend fun getVsetkyMeny(): List<Mena> {
         return menaDao.readAll()
     }
+
+    suspend fun setOblubena(mena: Mena?) {
+        mena?.let {
+            menaDao.setOblubena(it.skratka, it.oblubena)
+        }
+    }
+
+    fun jePripojene() = Runtime.getRuntime().exec("ping -c 1 google.com").waitFor() == 0
+    //https://stackoverflow.com/questions/9570237/android-check-internet-connection
 }

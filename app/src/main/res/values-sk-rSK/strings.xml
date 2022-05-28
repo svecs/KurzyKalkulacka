@@ -16,5 +16,11 @@
     <string name="price_to_eur">Hodnota (vzhľadom na 1 EUR): </string>
     <string name="last_update">Dátum poslednej aktualizácie</string>
     <string name="historical_trend">Historický vývoj hodnoty</string>
+    <string name="historical_trend_sub">za posledné 3 mesiace</string>
+    <string name="connection_error">Nefunguje internet, aplikácia pôjde offline</string>
+    <string name="loading_data">Načítavam dáta</string>
+    <string name="empty_tab_message">Z dôvodu chýbajúcich vopred uložených dát a žiadneho internetu nie je možné fungovať v offline režime.</string>
+    <string name="empty_tab_header">Prázdna pamäť</string>
+    <string name="empty_tab_accept">Ukončiť aplikáciu</string>
 
 </resources>

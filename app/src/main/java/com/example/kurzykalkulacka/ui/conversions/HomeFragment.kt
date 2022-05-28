@@ -1,12 +1,10 @@
-package com.example.kurzykalkulacka.ui.home
+package com.example.kurzykalkulacka.ui.conversions
 
 import android.app.Activity
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -19,15 +17,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
+import com.example.kurzykalkulacka.MainActivity
 import com.example.kurzykalkulacka.PrevodModel
+import com.example.kurzykalkulacka.R
 import com.example.kurzykalkulacka.databinding.FragmentHomeBinding
+import com.example.kurzykalkulacka.ui.MainActivityViewModel
 import com.example.kurzykalkulacka.ui.VyberMeny
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.murgupluoglu.flagkit.FlagKit
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.NumberFormatException
 import java.text.NumberFormat
 import java.util.*
-import java.util.prefs.Preferences
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -39,8 +40,9 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val prevodyViewModel: PrevodyViewModel by viewModels()
-
-    private var dataNacitane: Boolean = false;
+    private val mainActivityViewModel: MainActivityViewModel by viewModels ({
+        requireActivity()
+    })
 
     val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if(it.resultCode == Activity.RESULT_OK) {
@@ -48,7 +50,7 @@ class HomeFragment : Fragment() {
             val poradie = it.data?.getIntExtra("poradie", -1)
             Log.e("ID zvolenej meny", idMeny.toString())
             Log.e("Poradie chipu", poradie.toString())
-            Toast.makeText(context, "IT data: $idMeny", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "IT data: $idMeny", Toast.LENGTH_SHORT).show()
             val sp: SharedPreferences = requireContext().getSharedPreferences("data", Context.MODE_PRIVATE)
             val pref: SharedPreferences.Editor = sp.edit()
             if(poradie == 0) {
@@ -58,17 +60,15 @@ class HomeFragment : Fragment() {
             pref.commit()
             if(poradie == 0) {
                 //prevodyViewModel.idMenyA.value = idMeny
-                binding.firstChip.chipIcon = FlagKit.getDrawable(requireContext(), idMeny!!.substring(0,2))
-                binding.firstChip.text = idMeny!!
                 prevodyViewModel.upravKurzA(idMeny!!)
-                prevodyViewModel.aktualizujPrevodyZhoraDole()
+                //revodyViewModel.aktualizujPrevodyZhoraDole()
             }
             else {
                 //prevodyViewModel.idMenyB.value = idMeny
-                binding.secondChip.chipIcon = FlagKit.getDrawable(requireContext(), idMeny!!.substring(0,2))
-                binding.secondChip.text = idMeny!!
+                //binding.secondChip.chipIcon = FlagKit.getDrawable(requireContext(), idMeny!!.substring(0,2))
+                //binding.secondChip.text = idMeny!!
                 prevodyViewModel.upravKurzB(idMeny!!)
-                prevodyViewModel.aktualizujPrevodyZdolaHore()
+                //prevodyViewModel.aktualizujPrevodyZdolaHore()
             }
         }
     }
@@ -79,13 +79,30 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         try {
+            //_binding = Fra.inflate(inflater, container, false)
             _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-            prevodyViewModel.loadData()
+            //prevodyViewModel.loadData()
 
             val root: View = binding.root
 
+            prevodyViewModel.kurzA.observe(viewLifecycleOwner) {
+                if(it == null) return@observe
+                binding.firstChip.chipIcon = FlagKit.getDrawable(requireContext(),
+                    it.idMeny.substring(0,2)
+                )
+                binding.firstChip.text = it.idMeny
+                prevodyViewModel.aktualizujPrevodyZhoraDole()
+            }
 
+            prevodyViewModel.kurzB.observe(viewLifecycleOwner) {
+                if(it == null) return@observe
+                binding.secondChip.chipIcon = FlagKit.getDrawable(requireContext(),
+                    it.idMeny.substring(0,2)
+                )
+                binding.secondChip.text = it.idMeny
+                prevodyViewModel.aktualizujPrevodyZdolaHore()
+            }
 
             binding.firstChip.setOnClickListener {
                 val i = Intent(this.requireContext(), VyberMeny::class.java)
@@ -144,21 +161,12 @@ class HomeFragment : Fragment() {
             }
         })
 
-        binding.firstValEditText.setOnTouchListener { view, motionEvent ->
-            view.onTouchEvent(motionEvent)
-            val im: InputMethodManager? = (view.context.getSystemService(Context.INPUT_METHOD_SERVICE)) as InputMethodManager?
-            im?.hideSoftInputFromWindow(view.windowToken, 0)
-            true
-        }
 
-        binding.secondValEditText.setOnTouchListener { view, motionEvent ->
-            view.onTouchEvent(motionEvent)
-            val im: InputMethodManager? = (view.context.getSystemService(Context.INPUT_METHOD_SERVICE)) as InputMethodManager?
-            im?.hideSoftInputFromWindow(view.windowToken, 0)
-            true
-        }
 
-        //zdroj: https://stackoverflow.com/questions/43017184/prevent-keyboard-from-popping-up-on-edittext-click
+        binding.firstValEditText.showSoftInputOnFocus = false
+        binding.secondValEditText.showSoftInputOnFocus = false
+       // https://stackoverflow.com/questions/10636635/disable-keyboard-on-edittext
+
 
         binding.b0.setOnClickListener { stlacKlaves('0') }
         binding.b1.setOnClickListener { stlacKlaves('1') }
@@ -172,6 +180,15 @@ class HomeFragment : Fragment() {
         binding.b9.setOnClickListener { stlacKlaves('9') }
         binding.bdot.setOnClickListener { stlacKlaves(',') }
         binding.bback.setOnClickListener { stlacKlaves('-') }
+        binding.bback.setOnLongClickListener {
+            if(binding.firstValEditText.hasFocus()) {
+                binding.firstValEditText.setText("")
+            }
+            else if(binding.secondValEditText.hasFocus()) {
+                binding.secondValEditText.setText("")
+            }
+            true
+        }
 
 
         binding.firstValEditText.addTextChangedListener(object: TextWatcher {
@@ -226,31 +243,110 @@ class HomeFragment : Fragment() {
         /*val poslednaAktualizacia: String? = sp.getString("poslednaAktualizacia", null)
         val dnesnyDatum = PrevodModel.dnesnyDatumString()
         if(!poslednaAktualizacia.isNullOrEmpty() and (dnesnyDatum != poslednaAktualizacia)) {*/
-            prevodyViewModel.stiahniData()
+        //prevodyViewModel.stiahniData()
             /*val pref: SharedPreferences.Editor = sp.edit()
             pref.putString("poslednaAktualizacia", dnesnyDatum)
             pref.commit()
         }*/
 
-        prevodyViewModel.upravKurzA(sp.getString("mena0", null) ?: "USD")
-        prevodyViewModel.upravKurzB(sp.getString("mena1", null) ?: "CZK")
+        //prevodyViewModel.upravKurzA(sp.getString("mena0", null) ?: "USD")
+        //prevodyViewModel.upravKurzB(sp.getString("mena1", null) ?: "CZK")
 
-        binding.firstChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzA.value!!.idMeny.substring(0,2))
-        binding.secondChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzB.value!!.idMeny.substring(0,2))
+        //Log.wtf("HFdpF", mainActivityViewModel.dataPrisli.value!!.toString())
 
-        binding.firstChip.text = prevodyViewModel.kurzA.value!!.idMeny
-        binding.secondChip.text = prevodyViewModel.kurzB.value!!.idMeny
+        mainActivityViewModel.dataPrisli.observe(activity as MainActivity) {
+            Log.wtf("TTPK", it.toString())
+            if(it) {
+                prevodyViewModel.upravKurzA(sp.getString("mena0", null))
+                prevodyViewModel.upravKurzB(sp.getString("mena1", null))
+
+                /*binding.firstChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzA.value!!.idMeny.substring(0,2))
+                binding.secondChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzB.value!!.idMeny.substring(0,2))
+
+                binding.firstChip.text = prevodyViewModel.kurzA.value!!.idMeny
+                binding.secondChip.text = prevodyViewModel.kurzB.value!!.idMeny*/
+
+                binding.loadingCL.visibility = View.GONE
+                binding.kalkulackaLL.visibility = View.VISIBLE
+            }
+        }
+
+        mainActivityViewModel.chybaPripojenia.observe(activity as MainActivity) {
+            Log.wtf("CHPR", it.toString())
+            if(!mainActivityViewModel.razZavolane) {
+                mainActivityViewModel.razZavolane = true
+                return@observe
+            }
+            if(it) {
+                mainActivityViewModel.jePrazdnaTabulka()
+                /*prevodyViewModel.upravKurzA(sp.getString("mena0", null) ?: "USD")
+                prevodyViewModel.upravKurzB(sp.getString("mena1", null) ?: "CZK")
+
+                binding.firstChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzA.value!!.idMeny.substring(0,2))
+                binding.secondChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzB.value!!.idMeny.substring(0,2))
+
+                binding.firstChip.text = prevodyViewModel.kurzA.value!!.idMeny
+                binding.secondChip.text = prevodyViewModel.kurzB.value!!.idMeny*/
+
+                //binding.loadingCL.visibility = View.GONE
+                //binding.kalkulackaLL.visibility = View.VISIBLE
+            }
+            else {
+                //prevodyViewModel.upravKurzA(sp.getString("mena0", null))
+                //prevodyViewModel.upravKurzB(sp.getString("mena1", null))
+
+                /*binding.firstChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzA.value!!.idMeny.substring(0,2))
+                binding.secondChip.chipIcon = FlagKit.getDrawable(this.requireContext(), prevodyViewModel.kurzB.value!!.idMeny.substring(0,2))
+
+                binding.firstChip.text = prevodyViewModel.kurzA.value!!.idMeny
+                binding.secondChip.text = prevodyViewModel.kurzB.value!!.idMeny*/
+            }
+        }
+
+        mainActivityViewModel.tabulkaPrazdna.observe(activity as MainActivity) {
+            if(it) {
+                Log.wtf("TabPr", "Tabulka je prazdna")
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(getString(R.string.empty_tab_header))
+                    .setMessage(getString(R.string.empty_tab_message))
+                    .setPositiveButton(getString(R.string.empty_tab_accept)) { dialog, which ->
+                    }
+                    .setOnDismissListener {
+                        (activity as MainActivity).finishAndRemoveTask()
+                    }
+                    .show()
+            } else {
+                prevodyViewModel.upravKurzA(sp.getString("mena0", null))
+                prevodyViewModel.upravKurzB(sp.getString("mena1", null))
+
+                binding.loadingCL.visibility = View.GONE
+                binding.kalkulackaLL.visibility = View.VISIBLE
+            }
+        }
 
         prevodyViewModel.nasobok.observe(viewLifecycleOwner) {
-            val fm: String = prevodyViewModel.kurzA.value!!.idMeny
-            var nsb: String = "%.2f".format(prevodyViewModel.nasobok.value)
-            val sm: String = prevodyViewModel.kurzB.value!!.idMeny
-            val datum: String = PrevodModel.slovenskyDatum(prevodyViewModel.kurzA.value!!.datum)
-            binding.kurzText.text = "1 $fm = $nsb $sm\n(k $datum)"
+            if(mainActivityViewModel.dataPrisli.value!! xor mainActivityViewModel.chybaPripojenia.value!!) {
+                Log.wtf("nasobok", it.toString())
+                if(it <= 0) return@observe
+                val fm: String = prevodyViewModel.kurzA.value!!.idMeny
+                var nsb: String = "%.2f".format(prevodyViewModel.nasobok.value)
+                val sm: String = prevodyViewModel.kurzB.value!!.idMeny
+                val datum: String = PrevodModel.slovenskyDatum(prevodyViewModel.kurzA.value!!.datum)
+                binding.kurzText.text = "1 $fm = $nsb $sm\n(k $datum)"
+            }
+        }
+
+        binding.swapButton.setOnClickListener {
+            binding.firstChip.chipIcon = FlagKit.getDrawable(requireContext(), prevodyViewModel.kurzB.value!!.idMeny.substring(0,2))
+            binding.firstChip.text = prevodyViewModel.kurzB.value!!.idMeny
+            binding.secondChip.chipIcon = FlagKit.getDrawable(requireContext(), prevodyViewModel.kurzA.value!!.idMeny.substring(0,2))
+            binding.secondChip.text = prevodyViewModel.kurzA.value!!.idMeny
+            prevodyViewModel.swapniKurzy()
         }
     }
 
     fun stlacKlaves(znak: Char) {
+        Log.wtf("HFdpF", mainActivityViewModel.dataPrisli.value!!.toString())
         if(binding.firstValEditText.hasFocus()) {
             if(znak == '-') {
                 if((binding.firstValEditText.text?.length ?: 0) == 0) return

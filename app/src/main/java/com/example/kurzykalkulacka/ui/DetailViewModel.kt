@@ -22,6 +22,8 @@ class DetailViewModel @Inject constructor(
     val menaLD: MutableLiveData<Mena> = MutableLiveData<Mena>()
     val kurzyLD: MutableLiveData<List<Kurz>> = MutableLiveData<List<Kurz>>()
 
+    var zmeniloSa = false
+
     fun nacitajData(menaId: String) {
         viewModelScope.launch {
             lateinit var mena: Mena
@@ -39,6 +41,16 @@ class DetailViewModel @Inject constructor(
 
             menaLD.value = mena
             kurzyLD.value = kurzy
+        }
+    }
+
+    fun nastavOblubena(b: Boolean) {
+        viewModelScope.launch {
+            zmeniloSa = !zmeniloSa
+            menaLD.value?.oblubena = b
+            withContext(Dispatchers.IO) {
+                repository.setOblubena(menaLD.value)
+            }
         }
     }
 

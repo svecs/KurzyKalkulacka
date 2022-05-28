@@ -1,4 +1,4 @@
-package com.example.kurzykalkulacka.ui.dashboard
+package com.example.kurzykalkulacka.ui.rates
 
 import androidx.lifecycle.*
 import com.example.kurzykalkulacka.data.DefaultRepository
@@ -7,7 +7,6 @@ import com.example.kurzykalkulacka.ui.KurzModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +20,8 @@ class DashboardViewModel @Inject constructor(
     val text: LiveData<String> = _text
 
     var oblubeneMeny = 0
+
+    var prveNacitanie = true
 
     val zoznamKurzModel: LiveData<List<KurzModel>> = liveData {
         withContext(Dispatchers.IO) {

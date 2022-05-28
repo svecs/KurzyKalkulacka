@@ -18,7 +18,7 @@ interface MenaDao {
     @Query("DELETE FROM meny")
     suspend fun deleteAll()
 
-    @Query("SELECT * FROM meny ORDER BY oblubena DESC, skratka ASC")
+    @Query("SELECT * FROM meny WHERE skratka IN (SELECT DISTINCT idMeny FROM kurzy) ORDER BY oblubena DESC, skratka ASC")
     suspend fun readAll(): List<Mena>
 
     @Query("SELECT COUNT(*) FROM meny")
@@ -26,4 +26,7 @@ interface MenaDao {
 
     @Query("SELECT * FROM meny WHERE skratka=:menaId")
     suspend fun readMena(menaId: String): Mena
+
+    @Query("UPDATE meny SET oblubena=:obl WHERE skratka=:menaId")
+    suspend fun setOblubena(menaId: String, obl: Boolean)
 }
